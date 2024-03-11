@@ -17,6 +17,8 @@ export default function Page() {
   const [filteredData, setFilteredData] = useState([]);
   const [data, setData] = useState([]); // State to hold fetched car data
   const [loading, setLoading] = useState(true);
+  const [searchLoader, setSearchLoader] = useState (false);
+
   const [hovered, setHovered] = useState(null);
 
   const sliderSettings = {
@@ -85,9 +87,11 @@ export default function Page() {
 
   const submitSearch = async (formData: any) => {
     try {
+      setSearchLoader(true);
       const response = await axios.post("/api/search", formData);
       setData(response.data); // Update data state with search results
-      setCurrentPage(0); // Reset current page to first page
+      setCurrentPage(0);
+      setSearchLoader(false); // Reset current page to first page
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -198,7 +202,7 @@ export default function Page() {
           />
         </div><br />
 
-        {loading ? (
+        {searchLoader || loading ? (
           <>
             {/* // <p className="text-center">Loading car data...</p> */}
             <div id="loading-overlay" className="fixed inset-0 z-50 flex items-center justify-center bg-gray-900 bg-opacity-60">
